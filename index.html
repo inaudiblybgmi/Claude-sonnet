@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple AI Chat App</title>
+    <script src="https://js.puter.com/v2/"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        #chatBox {
+            width: 90%;
+            max-width: 800px;
+            height: 500px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+
+        .user {
+            text-align: right;
+            margin: 10px 0;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .ai {
+            text-align: left;
+            margin: 10px 0;
+            color: #34495e;
+        }
+
+        pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        textarea {
+            width: 90%;
+            max-width: 800px;
+            height: 60px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            resize: none;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h2>AI Chat Application</h2>
+
+<div id="chatBox"></div>
+
+<textarea id="userInput" placeholder="Type your question here..."></textarea>
+<button onclick="sendMessage()">Send</button>
+
+<script>
+async function sendMessage() {
+    const inputBox = document.getElementById("userInput");
+    const chatBox = document.getElementById("chatBox");
+    const userText = inputBox.value.trim();
+    if (!userText) return;
+
+    // Display user message
+    chatBox.innerHTML += `<div class="user">You: ${userText}</div>`;
+    inputBox.value = "";
+
+    // Create AI message container
+    const aiDiv = document.createElement("div");
+    aiDiv.className = "ai";
+    aiDiv.innerHTML = "AI: ";
+    chatBox.appendChild(aiDiv);
+
+    // Call AI
+    const response = await puter.ai.chat(userText, {
+        model: "claude-sonnet-4.5",
+        stream: true
+    });
+
+    let fullText = "";
+
+    for await (const part of response) {
+        if (part?.text) {
+            fullText += part.text;
+
+            // Format code blocks
+            let formatted = fullText
+                .replace(/```([\s\S]*?)```/g, "<pre>$1</pre>")
+                .replace(/\n/g, "<br>");
+
+            aiDiv.innerHTML = "AI: " + formatted;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    }
+}
+</script>
+
+</body>
+</html>
