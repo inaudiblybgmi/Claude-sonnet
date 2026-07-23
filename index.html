@@ -346,12 +346,22 @@
     color: var(--ink-soft);
     letter-spacing: 0.08em;
   }
+
+  footer a, header .eyebrow a{
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px dotted currentColor;
+  }
+
+  footer a:hover, header .eyebrow a:hover{
+    color: var(--maroon);
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="eyebrow">A DevArts's Product</div>
+  <div class="eyebrow">A <a href="https://www.devarts.in" target="_blank" rel="noopener noreferrer">DevArts's</a> Product</div>
   <div class="rule"></div>
 </header>
 
@@ -367,7 +377,7 @@
   </div>
 </form>
 
-<footer>Powered by DevArt's with 💓</footer>
+<footer>Powered by <a href="https://www.devarts.in" target="_blank" rel="noopener noreferrer">DevArt's</a> with 💓</footer>
 
 <script>
 const chatBox = document.getElementById("chatBox");
